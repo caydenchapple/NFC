@@ -12,7 +12,7 @@ object NdefRecordParser {
 
     fun parseRecord(record: NdefRecord): ParsedNdefRecord {
         val type = String(record.type, Charsets.US_ASCII)
-        return when (record.tnf.toInt()) {
+        return when (record.tnf) {
             NdefRecord.TNF_WELL_KNOWN -> when {
                 type == String(NdefRecord.RTD_TEXT, Charsets.US_ASCII) -> parseText(record)
                 type == String(NdefRecord.RTD_URI, Charsets.US_ASCII) -> parseUri(record)
