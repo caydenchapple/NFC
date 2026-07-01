@@ -6,6 +6,12 @@ records, cloning tags, formatting/erasing/locking, per-tag task automation, and
 emulating a tag from the phone itself (HCE). Built with Kotlin + Jetpack
 Compose, targeting minSdk 24.
 
+**Looking for the iOS build?** See [`ios-app/`](ios-app/README.md) — a separate React
+Native + TypeScript project (open `ios-app/ios/NFCKit.xcworkspace` in Xcode). Its README
+explains why it's a distinct app rather than a shared cross-platform codebase: Core NFC's
+capabilities (no HCE, no background scanning, no MIFARE Classic raw access, no Wi-Fi/
+Bluetooth/volume/alarm APIs) don't map onto this Android app's feature set.
+
 ## Scope decisions (read this first)
 
 The original brief asked for a literal clone built from an APKMirror download
