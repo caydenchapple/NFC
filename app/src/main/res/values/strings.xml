@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NFC Kit</string>
+    <string name="hce_service_desc">Emulate an NFC tag from your phone</string>
+</resources>
