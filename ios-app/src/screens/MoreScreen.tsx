@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, Modal, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { NdefRecord } from 'react-native-nfc-manager';
-import { Card, PrimaryButton, SecondaryButton, SectionHeader } from '../components/Primitives';
+import { Card, DangerButton, PrimaryButton, SecondaryButton, SectionHeader } from '../components/Primitives';
+import { ScreenBackground } from '../components/ScreenBackground';
 import { addHistoryEntry, exportProfilesJson, importProfilesJson } from '../data/storage';
 import { cloneCapture, cloneWrite, eraseTag, lockTag } from '../nfc/NfcService';
 import { colors } from '../theme/colors';
@@ -68,6 +69,7 @@ export default function MoreScreen({
   }, []);
 
   return (
+    <ScreenBackground>
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <SectionHeader title="Tag maintenance" />
 
@@ -75,45 +77,46 @@ export default function MoreScreen({
         <Text style={styles.cardTitle}>Copy / clone tag</Text>
         <Text style={styles.cardSubtitle}>Scan a source tag, then scan a target tag to duplicate it.</Text>
         <View style={styles.buttonRow}>
-          <SecondaryButton title="1. Scan source" onPress={runCloneCapture} />
-          <PrimaryButton title="2. Scan target" onPress={runCloneWrite} disabled={!captured} />
+          <SecondaryButton title="1. Scan source" onPress={runCloneCapture} icon="scan" />
+          <PrimaryButton title="2. Scan target" onPress={runCloneWrite} disabled={!captured} icon="download" />
         </View>
       </Card>
 
       <Card>
         <Text style={styles.cardTitle}>Erase tag</Text>
         <Text style={styles.cardSubtitle}>Clears the NDEF content.</Text>
-        <SecondaryButton title="Erase" onPress={runErase} />
+        <DangerButton title="Erase" onPress={runErase} icon="trash" />
       </Card>
 
       <Card>
         <Text style={styles.cardTitle}>Lock tag</Text>
         <Text style={styles.cardSubtitle}>Makes it permanently read-only. Not every tag supports this, and it cannot be undone.</Text>
-        <SecondaryButton title="Lock" onPress={confirmLock} />
+        <DangerButton title="Lock" onPress={confirmLock} icon="lock" />
       </Card>
 
       {status && (
         <Card style={styles.statusCard}>
-          <Text>{status}</Text>
+          <Text style={styles.statusText}>{status}</Text>
         </Card>
       )}
 
       <SectionHeader title="Library" />
       <Card>
-        <SecondaryButton title="Profiles" onPress={onOpenProfiles} />
+        <SecondaryButton title="Profiles" onPress={onOpenProfiles} icon="starOutline" />
       </Card>
       <Card>
-        <SecondaryButton title="History" onPress={onOpenHistory} />
+        <SecondaryButton title="History" onPress={onOpenHistory} icon="clock" />
       </Card>
 
       <SectionHeader title="Backup" />
       <View style={styles.buttonRow}>
-        <SecondaryButton title="Export profiles" onPress={exportProfiles} />
-        <SecondaryButton title="Import profiles" onPress={() => setImportOpen(true)} />
+        <SecondaryButton title="Export profiles" onPress={exportProfiles} icon="upload" />
+        <SecondaryButton title="Import profiles" onPress={() => setImportOpen(true)} icon="download" />
       </View>
 
       <ImportModal visible={importOpen} onClose={() => setImportOpen(false)} />
     </ScrollView>
+    </ScreenBackground>
   );
 }
 
@@ -135,6 +138,7 @@ function ImportModal({ visible, onClose }: { visible: boolean; onClose: () => vo
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
+      <ScreenBackground>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
         <SectionHeader title="Import profiles" />
         <Text style={styles.cardSubtitle}>Paste a backup JSON exported from NFC Kit.</Text>
@@ -149,29 +153,32 @@ function ImportModal({ visible, onClose }: { visible: boolean; onClose: () => vo
         />
         {error && <Text style={styles.error}>{error}</Text>}
         <View style={styles.buttonRow}>
-          <SecondaryButton title="Cancel" onPress={onClose} />
-          <PrimaryButton title="Import" onPress={doImport} disabled={text.trim().length === 0} />
+          <SecondaryButton title="Cancel" onPress={onClose} icon="close" />
+          <PrimaryButton title="Import" onPress={doImport} disabled={text.trim().length === 0} icon="download" />
         </View>
       </ScrollView>
+      </ScreenBackground>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 16, gap: 12 },
-  cardTitle: { fontSize: 16, fontWeight: '600', color: colors.text },
-  cardSubtitle: { color: colors.textMuted, fontSize: 13 },
+  screen: { flex: 1 },
+  content: { padding: 16, paddingBottom: 36, gap: 12 },
+  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, letterSpacing: 0.2 },
+  cardSubtitle: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
   buttonRow: { flexDirection: 'row', gap: 8, marginTop: 8 },
-  statusCard: { backgroundColor: colors.surfaceAlt },
+  statusCard: { backgroundColor: colors.accentGreenMuted, borderColor: colors.accentGreen },
+  statusText: { color: colors.accentGreenBright, fontWeight: '600' },
   multiline: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 8,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 10,
     padding: 12,
     minHeight: 200,
     textAlignVertical: 'top',
     color: colors.text,
   },
-  error: { color: colors.danger },
+  error: { color: colors.danger, fontWeight: '600' },
 });
