@@ -1,16 +1,28 @@
 # NFC Kit
 
-A free, open, ad-free Android app that covers the everyday NFC workflows people
-reach for "NFC Tools"-style apps for: reading tags, writing standardized NDEF
-records, cloning tags, formatting/erasing/locking, per-tag task automation, and
-emulating a tag from the phone itself (HCE). Built with Kotlin + Jetpack
-Compose, targeting minSdk 24.
+A free, open, ad-free app — **for both Android and iOS** — that covers the
+everyday NFC workflows people reach for "NFC Tools"-style apps for: reading
+tags, writing standardized NDEF records, cloning tags, formatting/erasing/
+locking, and per-tag task automation.
 
-**Looking for the iOS build?** See [`ios-app/`](ios-app/README.md) — a separate React
-Native + TypeScript project (open `ios-app/ios/NFCKit.xcworkspace` in Xcode). Its README
-explains why it's a distinct app rather than a shared cross-platform codebase: Core NFC's
-capabilities (no HCE, no background scanning, no MIFARE Classic raw access, no Wi-Fi/
-Bluetooth/volume/alarm APIs) don't map onto this Android app's feature set.
+| Platform | Where | Stack |
+|---|---|---|
+| **Android** | this repo (`app/`) | Kotlin + Jetpack Compose, minSdk 24 |
+| **iOS** | [`ios-app/`](ios-app/README.md) | React Native + TypeScript, Core NFC (open `ios-app/ios/NFCKit.xcworkspace` in Xcode) |
+
+These are two separate, native codebases rather than one shared cross-platform
+app, because the two platforms' NFC APIs don't offer the same capabilities.
+Notably, **HCE tag emulation, background/passive scanning, MIFARE Classic raw
+sector access, and Wi-Fi/Bluetooth/volume/alarm task actions are Android-only**
+— Apple's Core NFC doesn't expose equivalents, so the iOS app re-scopes its
+Tasks catalog and tag-maintenance actions to what's actually possible there.
+See the [iOS README](ios-app/README.md#whats-different-from-the-android-app)
+for the full platform-by-platform feature diff.
+
+The rest of this document covers the **Android app**. For iOS-specific setup,
+requirements (a paid Apple Developer account is needed for on-device NFC
+testing — the Simulator has no NFC radio), and caveats, see
+[`ios-app/README.md`](ios-app/README.md).
 
 ## Scope decisions (read this first)
 
